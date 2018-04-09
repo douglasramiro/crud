@@ -1,6 +1,8 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var PagamentoModel = require("./src/model/PagamentoModel");
 var PagamentoController = require("./src/controller/PagamentoController");
+var MongooseDatabase = require('./src/config/MongooseDatabase')
 
 class Principal{
    constructor(){
@@ -20,6 +22,7 @@ class Principal{
            console.log(req.body);
            resp.send("ok");
        });
+
    }
 }
 

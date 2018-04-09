@@ -1,22 +1,32 @@
-var ConnectionFactory = require("./ConnectionFactory");
+var mongoose = require("mongoose");
+
 class PagamentoDao {
 
-    constructor(conexao){
-        this._conexao = ConnectionFactory.conectar();
+    constructor(){
+        this.pagamentoModel = mongoose.model("PagamentoModel");
     }
 
-    salvar(pagamento, callback){
-        this._conexao.query('insert into pagamentos SET ? ', pagamento, callback);
+    atualizar(id,pagamento){
+        return this.pagamentoModel.findByIdAndUpdate(id,pagamento,{new: true});
+    }
+
+    salvar(pagamento){
+        return this.pagamentoModel.create(pagamento);
     }
 
 
-    listar(callback) {
-        this._conexao.query('select * from pagamentos', callback);
+    listar() {
+        return this.pagamentoModel.find({});
     }
 
-    buscarPorId(id, callback) {
-        this._conexao.query('select * from pagamentos where id = ?',[id], callback);
+    buscarPorId(id) {
+        return this.pagamentoModel.findById(id);
+    }
+
+    apagar(id){
+        return this.pagamentoModel.remove({_id: id});
     }
 }
 
 module.exports = new PagamentoDao();
+
