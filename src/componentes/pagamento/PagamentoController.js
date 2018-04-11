@@ -1,17 +1,20 @@
-var PagamentoService = require("../service/PagamentoService");
+var PagamentoBo = require("./PagamentoBo");
+var guard = require('express-jwt-permissions')()
 
 class PagamentoController{
     constructor(route){
-        route.post("/pagamentos",this.salvar.bind(this));
+        route.post("/pagamentos",guard.check([['ADMIN'],['AUTENTICADO']]),this.salvar.bind(this));
         route.get("/pagamentos", this.listar.bind(this));
         route.get("/pagamentos/:id", this.buscarPorId.bind(this));
-        route.delete("/pagamentos/:id", this.apagar.bind(this));
-        route.put("/pagamentos/:id", this.atualizar.bind(this));
+        route.delete("/pagamentos/:id", guard.check('ADMIN'), this.apagar.bind(this));
+        route.put("/pagamentos/:id",guard.check([['ADMIN'],['AUTENTICADO']]),this.atualizar.bind(this));
 
     }
 
     listar(req,resp){
-        PagamentoService.listar().then(
+
+
+        PagamentoBo.listar().then(
             function (resposta) {
                 resp.json(resposta);
             },
@@ -22,7 +25,7 @@ class PagamentoController{
     }
 
     buscarPorId(req,resp){
-        PagamentoService.buscarPorId(req.params.id).then(
+        PagamentoBo.buscarPorId(req.params.id).then(
             function (resposta) {
                 resp.json(resposta);
             },
@@ -35,7 +38,7 @@ class PagamentoController{
     salvar(req,resp){
         let pagamento = req.body;
         console.log(pagamento);
-        PagamentoService.salvar(pagamento).then(
+        PagamentoBo.salvar(pagamento).then(
             function (pagamento) {
                 resp.json(pagamento);
             },
@@ -47,7 +50,7 @@ class PagamentoController{
 
     atualizar(req,resp){
         let pagamento = req.body;
-        PagamentoService.atualizar(req.params.id,pagamento).then(
+        PagamentoBo.atualizar(req.params.id,pagamento).then(
             function (retorno) {
                 resp.json(retorno);
             },
@@ -59,7 +62,7 @@ class PagamentoController{
 
     apagar(req,resp){
 
-        PagamentoService.apagar(req.params.id).then(
+        PagamentoBo.apagar(req.params.id).then(
             function () {
                 resp.sendStatus(204);
             },

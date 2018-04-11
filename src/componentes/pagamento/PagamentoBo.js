@@ -1,6 +1,6 @@
-var PagamentoDao = require("../dao/PagamentoDao");
+var PagamentoDao = require("./PagamentoDao");
 
-class PagamentoService {
+class PagamentoBo {
 
     salvar(pagamento){
         pagamento.status = "Criado";
@@ -26,4 +26,4 @@ class PagamentoService {
     }
 }
 
-module.exports = new PagamentoService();
+module.exports = new PagamentoBo();
